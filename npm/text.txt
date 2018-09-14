@@ -1,0 +1,2 @@
+//Major(adding features that could break existing version).Minor(adding features that don't break existing api).Patch(bug fixes)
+// ^ carat symbol means we are interested in any version as long as the major version is 4 eg ^4.13.6 ~4.13.6 means 4 and 13 should stay the same. 
