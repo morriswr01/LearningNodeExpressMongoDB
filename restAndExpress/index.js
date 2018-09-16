@@ -80,8 +80,6 @@ function validateCourse(course){
     return result;
 }
 
-app.put
-
 // PORTs are dynamically assigned on a deployment server(production) so will not always be 3000. PORT env variable must be used by application.
 const port = process.env.PORT || 3000;
 app.listen(port, () => {
