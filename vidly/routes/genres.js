@@ -6,7 +6,7 @@ const genres = [
     { id: 2, name: 'horror'},
     { id: 3, name: 'sci-fi'},
     { id: 3, name: 'comedy'}
-]
+];
 
 //Get all the genres
 router.get('/', (req, res) => {
