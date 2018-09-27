@@ -4,25 +4,39 @@ mongoose.connect('mongodb://localhost:27017/playground', { useNewUrlParser: true
     .catch(err => console.error('Could not connect to MongoDB...)', err));
 
     const courseSchema = new mongoose.Schema({
-        name: { 
+        name: {
             type: String,
             required: true,
             minlength: 5,
             maxlength: 255,            
         },
         category: {
-            type: string,
+            type: String,
             required: true,
-            enum: ['web','mobile','network'] //Array of valid strings
+            enum: ['web','mobile','network'], //Array of valid strings
+            lowercase: true,
+            // uppercase: true,
+            trim: true
         },
         author: String,
         tags: {
             type: Array,
             validate: {
-                validator: function(v) {
-                    return v.length > 0;
+                //Making this validator an async validator so that we can validate based on information that we do not have straight away and avoid a blocking model
+                isAsync: true,
+                validator: function(v, callback) {
+                    setTimeout( () => {
+                        //Do some async work
+                        const result = v && v.length > 0;
+                        callback(result);
+                    }, 1000);
                 },
                 message: 'A course should have > 1 tag'
+
+                // validator: function(v) {
+                //     return v && v.length > 0;
+                // },
+                // message: 'A course should have > 1 tag'
             }
         },
         date: { type: Date, default: Date.now },
@@ -33,7 +47,9 @@ mongoose.connect('mongodb://localhost:27017/playground', { useNewUrlParser: true
                 return this.isPublished;
             },
             min: 10,
-            max: 200
+            max: 200,
+            get: (v) => Math.round(v),
+            set: (v) => Math.round(v)
         }
     });
 
@@ -43,9 +59,10 @@ async function createCourse() {
     const course = new Course({
     name: 'Node.js Course',
     author: 'Dosh',
-    tags: ['angular', 'backend'],
+    category: 'Web ',
+    tags: ['frontend'],
     isPublished: true,
-    // price: 15
+    price: 15.5
     });
 
     try{
@@ -53,7 +70,9 @@ async function createCourse() {
         console.log(result);
     }
     catch (err){
-        console.log(err.message);
+        for (const errorItem in err.errors) {
+            console.log(err.errors[errorItem].message);
+        }
     }
 
 }
