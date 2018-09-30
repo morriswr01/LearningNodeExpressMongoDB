@@ -44,7 +44,7 @@ async function listCourses() {
     .find()
     .populate('author', 'name -_id')
     .select('name');
-  console.log(courses);
+  console.log(courses); 
 }
 
 // createAuthor('Mosh', 'My bio', 'My Website');

@@ -1,7 +1,7 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
-const { Customer, validate } = require('../models/customer');
+const { Customer, validateCustomer } = require('../models/customer');
 
 //Get all the customer
 router.get('/', async (req, res) => {
@@ -23,7 +23,7 @@ router.get('/:id', async (req, res) => {
 
 //Create a new customer
 router.post('/', async (req, res) => {
-    const { error } = validate(req.body);
+    const { error } = validateCustomer(req.body);
     if (error) {
         res.status(400).send(error.details[0].message); // 400 = bad request
         return;
@@ -38,7 +38,7 @@ router.post('/', async (req, res) => {
 }); 
 
 router.put('/:id', async (req,res) => {
-    const { error } = validate(req.body); // equiv to result.error
+    const { error } = validateCustomer(req.body); // equiv to result.error
     if (error) { //does customer given match validation criteria
         res.status(400).send(error.details[0].message); // 400 = bad request
         return;
