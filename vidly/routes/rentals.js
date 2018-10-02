@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const Joi = require('joi');
 const Fawn = require('fawn');
 const router = express.Router();
 const { Rental, validateRental } = require('../models/rental');
