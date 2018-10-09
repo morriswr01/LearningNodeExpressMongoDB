@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 const router = express.Router();
 const { Genre, validateGenre } = require('../models/genre');
 const {auth} = require('../middleware/auth');
+const {admin} = require('../middleware/admin');
 
 //Get all the genres
 router.get('/', async (req, res) => {
@@ -15,7 +16,7 @@ router.get('/', async (req, res) => {
 //Get a specified single genre
 router.get('/:id', async (req, res) => {
     const genre = await Genre.findById(req.params.id);
-    if (!genre) { //404
+    if (!genre) {
         res.status(404).send('The genre was not found');
         return;
     }
@@ -37,7 +38,7 @@ router.post('/', auth, async (req, res) => {
 }); 
 
 //Update a genre
-router.put('/:id', async (req,res) => {
+router.put('/:id', auth, async (req,res) => {
     const { error } = validateGenre(req.body); // equiv to result.error
     if (error) { //does genre given match validation criteria
         res.status(400).send(error.details[0].message); // 400 = bad request
@@ -56,9 +57,9 @@ router.put('/:id', async (req,res) => {
 });
 
 //Delete a genre
-router.delete('/:id', async (req, res) => {
+router.delete('/:id', [auth, admin], async (req, res) => {
     const deletedGenre = await Genre.findByIdAndDelete(req.params.id);
-    if (!genre) return res.status(404).send('The genre with the given ID was not found.');
+    if (!deletedGenre) return res.status(404).send('The genre with the given ID was not found.');
     res.send(deletedGenre);
 }); 
 
