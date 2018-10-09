@@ -2,6 +2,7 @@ const express = require('express');
 const mongoose = require('mongoose');
 const router = express.Router();
 const { Genre, validateGenre } = require('../models/genre');
+const {auth} = require('../middleware/auth');
 
 //Get all the genres
 router.get('/', async (req, res) => {
@@ -22,7 +23,7 @@ router.get('/:id', async (req, res) => {
 });
 
 //Create a new genre
-router.post('/', async (req, res) => {
+router.post('/', auth, async (req, res) => {
     const { error } = validateGenre(req.body);
     if (error) {
         res.status(400).send(error.details[0].message); // 400 = bad request
@@ -59,6 +60,6 @@ router.delete('/:id', async (req, res) => {
     const deletedGenre = await Genre.findByIdAndDelete(req.params.id);
     if (!genre) return res.status(404).send('The genre with the given ID was not found.');
     res.send(deletedGenre);
-});
+}); 
 
 module.exports = router;
