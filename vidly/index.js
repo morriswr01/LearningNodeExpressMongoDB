@@ -3,6 +3,8 @@ const mongoose = require('mongoose');
 const express = require('express');
 const app = express();
 const config = require('config');
+const error = require('./middleware/error');
+require('express-async-errors');
 
 //Validation
 const Joi = require('joi');
@@ -33,6 +35,7 @@ app.use('/api/movies', movies);
 app.use('/api/rentals', rentals);
 app.use('/api/users', users);
 app.use('/api/auth', auth);
+app.use(error);
 
 //Start local webserver and listen for api requests
 const port = process.env.PORT || 3000;
